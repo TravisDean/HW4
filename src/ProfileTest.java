@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertEquals;
  * Assignment: HW4
  * Lab Section: 102
  *
- * TODO: Check WebCat style, add comments.
+ * TODO: Check WebCat style, add comments and such.
  */
 public class ProfileTest {
     Profile travis = new Profile("tjd2qj", "Travis", "UVA");

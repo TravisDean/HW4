@@ -10,6 +10,8 @@ import static junit.framework.Assert.assertEquals;
  * Unix ID: tjd2qj and cam4sn
  * Assignment: HW4
  * Lab Section: 102
+ *
+ * TODO: Check WebCat style, add comments.
  */
 public class ProfileTest {
     Profile travis = new Profile("tjd2qj", "Travis", "UVA");

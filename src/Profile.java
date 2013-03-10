@@ -5,6 +5,8 @@ import java.util.*;
  * Unix ID: tjd2qj and cam4sn
  * Assignment: HW4
  * Lab Section: 102
+ *
+ * Todo: Check WebCat style, add comments.
  */
 public class Profile {
     private final String name;

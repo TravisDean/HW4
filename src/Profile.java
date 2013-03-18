@@ -16,6 +16,12 @@ public class Profile {
     private final static double MATCHING_COEFF = 1.0;
     private final static double NON_MATCHING_COEFF = 0.25;
 
+    /**
+     * Create a new Profile.
+     * @param id ID to use
+     * @param name name
+     * @param group group that it belongs to
+     */
     public Profile(String id, String name, String group) {
         this.name = name;
         this.id = id;
@@ -23,6 +29,12 @@ public class Profile {
         interests = new TreeMap<String, TreeSet<String>>();
     }
 
+    /**
+     * Adds the specified value to the profile's
+     * interests under the given category.
+     * @param category category of value
+     * @param value value to add
+     */
     public void addValue(String category, String value) {
         if (interests.containsKey(category)) {
             interests.get(category).add(value);
@@ -33,7 +45,11 @@ public class Profile {
             interests.put(category, values);
         }
     }
-
+    /**
+     * Adds the specified values to the category.
+     * @param category category of values
+     * @param values values to add
+     */
     public void addValues(String category, TreeSet<String> values) {
         if (interests.containsKey(category)) {
             interests.get(category).addAll(values);
@@ -43,6 +59,14 @@ public class Profile {
         }
     }
 
+    /**
+     * Gets the number of interests shared between this profile and the given
+     * one, in the given category.
+     * TODO: ignore case
+     * @param prof2 the other profile to compare
+     * @param category the category to check
+     * @return number of shared interests
+     */
     public int sharedInterestsCount(Profile prof2, String category) {
         // Clone to not modify original
         //noinspection unchecked
@@ -51,6 +75,14 @@ public class Profile {
         return simCategory.size();
     }
 
+    /**
+     * Gets the number of interests in this Profile that the given
+     * Profile does not share, in the given category.
+     * TODO: ignore case
+     * @param prof2 the other profile to compare
+     * @param category the category to check
+     * @return number of not shared interests
+     */
     public int nonSharedInterestsCount(Profile prof2, String category) {
         Set<String> difCategory = prof2.interests.get(category);
         // Clone to not modify original.
@@ -60,6 +92,12 @@ public class Profile {
         return notShared.size();
     }
 
+    /**
+     * Calculate a similarity score between this Profile and the given one.
+     * Uses constants to determine weight of matching and non-matching.
+     * @param prof2 the other profile
+     * @return similarity score
+     */
     public double similarity(Profile prof2) {
         double similarity = 0;
         for (String category : interests.keySet()) {

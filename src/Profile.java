@@ -106,6 +106,7 @@ public class Profile {
                 MATCHING_COEFF * sharedInterestsCount(prof2, category)
                 - NON_MATCHING_COEFF * nonSharedInterestsCount(prof2, category)
                 - NON_MATCHING_COEFF * prof2.nonSharedInterestsCount(this, category);
+                // TODO: Check for non overlapping categories. Check null categories.
             similarity += sim;
             // Testing code:
 //            System.out.println(category + ": " + sim);

@@ -11,7 +11,7 @@ import static junit.framework.Assert.assertEquals;
  * Assignment: HW4
  * Lab Section: 102
  *
- * TODO: Check WebCat style, add comments and such.
+ * TODO: WebCat style.
  */
 public class ProfileTest {
     Profile travis = new Profile("tjd2qj", "Travis", "UVA");
@@ -102,5 +102,24 @@ public class ProfileTest {
     @Test
     public void testSimilarity() throws Exception {
         assertEquals(3.0, travis.similarity(alex), 0.001);
+    }
+
+    @Test
+    public void testCaseIgnore() throws Exception {
+        Profile p1 = new Profile("test", "test", "test");
+        Profile p2 = new Profile("test2", "test2", "test2");
+        p1.addValue("case", "testvalue");
+        p2.addValue("case", "TESTVALUE");
+        assertEquals(1, p1.sharedInterestsCount(p2, "case"));
+
+        TreeSet<String> lowerCaseVals = new TreeSet<String>();
+        lowerCaseVals.add("test1");
+        lowerCaseVals.add("test2");
+        p1.addValues("case 2", lowerCaseVals);
+        TreeSet<String> upperCaseVals = new TreeSet<String>();
+        upperCaseVals.add("TEST1");
+        upperCaseVals.add("Test2");
+        p2.addValues("case 2", upperCaseVals);
+        assertEquals(2, p1.sharedInterestsCount(p2, "case 2"));
     }
 }

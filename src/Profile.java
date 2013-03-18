@@ -6,7 +6,7 @@ import java.util.*;
  * Assignment: HW4
  * Lab Section: 102
  *
- * Todo: Check WebCat style, add comments.
+ * Todo: Fix for WebCat style.
  */
 public class Profile {
     private final String name;
@@ -61,7 +61,7 @@ public class Profile {
 
     /**
      * Gets the number of interests shared between this profile and the given
-     * one, in the given category.
+     * one, in the given category. Ignores case when comparing.
      * TODO: ignore case
      * @param prof2 the other profile to compare
      * @param category the category to check
@@ -69,25 +69,26 @@ public class Profile {
      */
     public int sharedInterestsCount(Profile prof2, String category) {
         // Clone to not modify original
-        //noinspection unchecked
-        Set<String> simCategory = (Set<String>)prof2.interests.get(category).clone();
-        simCategory.retainAll(interests.get(category)); // Intersection
+        Set<String> origCategory = toLowerCase(interests.get(category));
+        @SuppressWarnings("unchecked") Set<String> simCategory =
+                toLowerCase((Set<String>)prof2.interests.get(category).clone());
+        simCategory.retainAll(origCategory); // Intersection
         return simCategory.size();
     }
 
     /**
      * Gets the number of interests in this Profile that the given
-     * Profile does not share, in the given category.
-     * TODO: ignore case
+     * Profile does not share, in the given category. Ignores case when
+     * comparing.
      * @param prof2 the other profile to compare
      * @param category the category to check
      * @return number of not shared interests
      */
     public int nonSharedInterestsCount(Profile prof2, String category) {
-        Set<String> difCategory = prof2.interests.get(category);
+        Set<String> difCategory = toLowerCase(prof2.interests.get(category));
         // Clone to not modify original.
-        //noinspection unchecked
-        Set<String> notShared = (TreeSet)interests.get(category).clone();
+        @SuppressWarnings("unchecked") Set<String> notShared =
+                toLowerCase((TreeSet)interests.get(category).clone());
         notShared.removeAll(difCategory);       // Difference
         return notShared.size();
     }
@@ -115,6 +116,11 @@ public class Profile {
         return  similarity;
     }
 
+    private Set<String> toLowerCase(Set<String> strings) {
+        TreeSet<String> lowerCased = new TreeSet<String>();
+        for (String s : strings) { lowerCased.add(s.toLowerCase()); }
+        return lowerCased;
+    }
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

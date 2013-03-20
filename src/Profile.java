@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Name: Travis Dean and Alex Martinez
@@ -7,6 +9,7 @@ import java.util.*;
  * Lab Section: 102
  *
  * Todo: Fix for WebCat style.
+ * TODO: Check for non overlapping categories. Check null categories.
  */
 public class Profile {
     private final String name;
@@ -62,16 +65,16 @@ public class Profile {
     /**
      * Gets the number of interests shared between this profile and the given
      * one, in the given category. Ignores case when comparing.
-     * TODO: ignore case
      * @param prof2 the other profile to compare
      * @param category the category to check
      * @return number of shared interests
      */
     public int sharedInterestsCount(Profile prof2, String category) {
-        // Clone to not modify original
-        Set<String> origCategory = toLowerCase(interests.get(category));
+        // Clone to not modify original.
+        @SuppressWarnings("unchecked") Set<String> origCategory =
+                toLowerCase((TreeSet)interests.get(category).clone());
         @SuppressWarnings("unchecked") Set<String> simCategory =
-                toLowerCase((Set<String>)prof2.interests.get(category).clone());
+                toLowerCase((TreeSet)prof2.interests.get(category).clone());
         simCategory.retainAll(origCategory); // Intersection
         return simCategory.size();
     }
@@ -85,11 +88,12 @@ public class Profile {
      * @return number of not shared interests
      */
     public int nonSharedInterestsCount(Profile prof2, String category) {
-        Set<String> difCategory = toLowerCase(prof2.interests.get(category));
         // Clone to not modify original.
+        @SuppressWarnings("unchecked") Set<String> difCategory =
+                toLowerCase((TreeSet)prof2.interests.get(category).clone());
         @SuppressWarnings("unchecked") Set<String> notShared =
                 toLowerCase((TreeSet)interests.get(category).clone());
-        notShared.removeAll(difCategory);       // Difference
+        notShared.removeAll(difCategory);  // Difference
         return notShared.size();
     }
 
@@ -106,7 +110,6 @@ public class Profile {
                 MATCHING_COEFF * sharedInterestsCount(prof2, category)
                 - NON_MATCHING_COEFF * nonSharedInterestsCount(prof2, category)
                 - NON_MATCHING_COEFF * prof2.nonSharedInterestsCount(this, category);
-                // TODO: Check for non overlapping categories. Check null categories.
             similarity += sim;
             // Testing code:
 //            System.out.println(category + ": " + sim);

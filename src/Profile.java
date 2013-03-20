@@ -65,11 +65,16 @@ public class Profile {
     /**
      * Gets the number of interests shared between this profile and the given
      * one, in the given category. Ignores case when comparing.
+     * If category does not exist in either profile, 0 returned.
      * @param prof2 the other profile to compare
      * @param category the category to check
      * @return number of shared interests
      */
     public int sharedInterestsCount(Profile prof2, String category) {
+        if (!interests.containsKey(category) ||
+                !prof2.interests.containsKey(category)) {
+            return 0;
+        }
         // Clone to not modify original.
         @SuppressWarnings("unchecked") Set<String> origCategory =
                 toLowerCase((TreeSet)interests.get(category).clone());
@@ -83,11 +88,20 @@ public class Profile {
      * Gets the number of interests in this Profile that the given
      * Profile does not share, in the given category. Ignores case when
      * comparing.
+     * If this Profile does not contain the category, 0 returned.
+     * If given Profile does not cotain the category but this one does,
+     * number of this Profile's interests in category returned.
      * @param prof2 the other profile to compare
      * @param category the category to check
      * @return number of not shared interests
      */
     public int nonSharedInterestsCount(Profile prof2, String category) {
+        if (!interests.containsKey(category)) {
+            return 0;
+        }
+        else if (!prof2.interests.containsKey(category)) {
+            return interests.get(category).size();
+        }
         // Clone to not modify original.
         @SuppressWarnings("unchecked") Set<String> difCategory =
                 toLowerCase((TreeSet)prof2.interests.get(category).clone());
@@ -105,7 +119,12 @@ public class Profile {
      */
     public double similarity(Profile prof2) {
         double similarity = 0;
-        for (String category : interests.keySet()) {
+        // Super set needed to cover instance in which prof2 has a key
+        // that does not exist in this Profile.
+        Set<String> superSet = new TreeSet<String>(interests.keySet());
+        superSet.addAll(prof2.interests.keySet());
+
+        for (String category : superSet) {
             double sim =
                 MATCHING_COEFF * sharedInterestsCount(prof2, category)
                 - NON_MATCHING_COEFF * nonSharedInterestsCount(prof2, category)

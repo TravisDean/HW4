@@ -122,4 +122,19 @@ public class ProfileTest {
         p2.addValues("case 2", upperCaseVals);
         assertEquals(2, p1.sharedInterestsCount(p2, "case 2"));
     }
+
+    @Test
+    public void testNonOverlappingCategories() throws Exception {
+        Profile p1 = new Profile("test", "test", "test");
+        Profile p2 = new Profile("test2", "test2", "test2");
+        p1.addValue("book", "GED");
+        p1.addValue("book", "Code Complete");
+        p2.addValue("book", "GED");
+        assertEquals(0.75, p1.similarity(p2), 0.001);
+
+        p1.addValue("game", "DOTA");
+        assertEquals(0.5, p1.similarity(p2));
+        p2.addValue("class", "SWDEV");
+        assertEquals(0.25, p1.similarity(p2));
+    }
 }

@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * Lab Section: 102
  *
  * Todo: Fix for WebCat style.
- * TODO: Check for non overlapping categories. Check null categories.
+ * TODO: Fix null category error.
  */
 public class Profile {
     private final String name;

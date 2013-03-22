@@ -1,7 +1,7 @@
 /**
- * Name: Travis Dean
- * Unix ID: tjd2qj
- * Assignment:
+ * Name: Travis Dean and Alex Martinez
+ * Unix ID: tjd2qj and cam4sn
+ * Assignment: HW4
  * Lab Section: 102
  */
 import java.util.Set;

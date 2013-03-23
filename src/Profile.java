@@ -13,6 +13,23 @@ import java.util.TreeSet;
  */
 public class Profile {
     private final String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public TreeMap<String, TreeSet<String>> getInterests() {
+        return interests;
+    }
+
     private final String id;
     private final String group;
     private TreeMap<String, TreeSet<String>> interests;
@@ -53,12 +70,12 @@ public class Profile {
      * @param category category of values
      * @param values values to add
      */
-    public void addValues(String category, TreeSet<String> values) {
+    public void addValues(String category, Set<String> values) {
         if (interests.containsKey(category)) {
             interests.get(category).addAll(values);
         }
         else {
-            interests.put(category, values);
+            interests.put(category, (TreeSet<String>)values);
         }
     }
 

@@ -27,7 +27,14 @@ public class UserMatchApp
         
         System.out.println(app.findBestMatches(2));
     }
-    
+
+    /**
+     * Finds the Profiles that have the most similarity to the Profile with the
+     * given ID. Runs in log(n) time.
+     * @param id the Profile to match
+     * @param num how many matches to return
+     * @return a List with the best matches
+     */
     public List<ProfileMatch> findBestMatches(String id, int num) {
         ArrayList<ProfileMatch> matchScores = new ArrayList<ProfileMatch>();
      	Profile p1 = profileMap.get(id);
@@ -44,17 +51,14 @@ public class UserMatchApp
     		matchScores.add(new ProfileMatch(id,person,p1.similarity(p2)));
     	}
     	
-    	Collections.sort(matchScores,new SimilaritySort());
-    	
-    	List<ProfileMatch> bestMatches = new ArrayList<ProfileMatch>();
-    	
-    	for (int numI = 0; numI < num && numI < matchScores.size(); numI++) {
-    		bestMatches.add(matchScores.get(numI));
-    	}
-    	
-    	return bestMatches;
+    	return cullList(matchScores, num);
     }
-    
+
+    /**
+     * Finds the best matching profiles. Runs in n^2*log(n) complexity..
+     * @param num number of matches to return
+     * @return List of ProfileMatches
+     */
     public List<ProfileMatch> findBestMatches(int num) {
     	ArrayList<ProfileMatch> matches = new ArrayList<ProfileMatch>();
     	ArrayList<String> keys = new ArrayList<String>();
@@ -68,34 +72,32 @@ public class UserMatchApp
     			matches.add(new ProfileMatch(p1.getId(),p2.getId(),p1.similarity(p2)));
     		}
     	}
-    	
-    	Collections.sort(matches,new SimilaritySort());
-    	
-    	List<ProfileMatch> bestMatches = new ArrayList<ProfileMatch>();
-    	
-    	for (int numBest = 0; numBest < num && numBest < matches.size(); numBest++) {
-    		bestMatches.add(matches.get(numBest));
-    	}
 
-    	return bestMatches;
+    	return cullList(matches, num);
     }
-    
+
+    /**
+     * Finds the Profiles that best match the given Profile in the group.
+     * @param id Profile to match
+     * @param group group to constrain matches to
+     * @param num number of matches to return
+     * @return List of ProfileMatches
+     */
     public List<ProfileMatch> findBestGroupMatches(String id, String group, int num) {
-    	Profile p1 = profileMap.get(id);
-    	
     	List<ProfileMatch> orderedMatches = findBestMatches(id,profileMap.size());
     	
     	List<ProfileMatch> bestGroupMatches = new ArrayList<ProfileMatch>();
     	
-    	for (int match = 0; match < num && match < orderedMatches.size(); match++) {
+    	for (int match = 0; match < orderedMatches.size(); match++) {
     		Profile p2 = profileMap.get(orderedMatches.get(match));
     		
     		if (p2.getGroup().equals(group)) {
     			bestGroupMatches.add(orderedMatches.get(match));
     		}
     	}
-    	
-    	return bestGroupMatches;
+
+        // Cull the list to the correct size.
+    	return cullList(bestGroupMatches, num);
     }
     
     
@@ -153,6 +155,24 @@ public class UserMatchApp
              
         dataSource.close(); // close up the ProfileDataSource before exiting
     }
-    
-    // need the other methods described in the assignment, of course!
+
+    /**
+     * Sorts and cuts a list down to the given size. If num is not in the
+     * correct range, entire list is returned.
+     * @param list
+     * @param num
+     * @return
+     */
+    private List<ProfileMatch> cullList(List<ProfileMatch> list, int num) {
+        Collections.sort(list, new SimilaritySort());
+        try {
+            int start = list.size() - num;
+            int end   = list.size();
+            return list.subList(start, end);
+        }
+        catch (Exception e) {
+            System.out.println("Cull list exception caught.");
+            return list;
+        }
+    }
 }

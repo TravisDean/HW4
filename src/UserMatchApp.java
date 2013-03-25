@@ -24,8 +24,15 @@ public class UserMatchApp
         UserMatchApp app = new UserMatchApp();
         ProfileDataSource ps = new MockProfileSource();
         app.loadData(ps);
-        
-        System.out.println(app.findBestMatches(2));
+
+        // Test stuff.
+        System.out.println("The current data:\n" + app.profileMap.toString());
+        System.out.println("Best matches:\n" + app.findBestMatches(2));
+        System.out.println("Best id1 Matches:\n" + app.findBestMatches("id1", 2));
+        System.out.println("Best group1 matches:\n" + app.findBestGroupMatches("grp1", 2));
+        System.out.println("Best group2 matches:\n" + app.findBestGroupMatches("grp2", 2));
+        System.out.println("Best group2 and id1 matches:\n" + app.findBestGroupMatches("id1", "grp2", 2));
+        System.out.println("Best group2 and id2 matches:\n" + app.findBestGroupMatches("id2", "grp2", 2));
     }
 
     /**
@@ -78,55 +85,58 @@ public class UserMatchApp
 
     /**
      * Finds the Profiles that best match the given Profile in the group.
+     * Returns empty list if group is not valid with given parameters.
      * @param id Profile to match
      * @param group group to constrain matches to
      * @param num number of matches to return
      * @return List of ProfileMatches
      */
     public List<ProfileMatch> findBestGroupMatches(String id, String group, int num) {
-    	List<ProfileMatch> orderedMatches = findBestMatches(id,profileMap.size());
+    	List<ProfileMatch> groupMatches =
+                findBestGroupMatches(group, profileMap.size());
     	
-    	List<ProfileMatch> bestGroupMatches = new ArrayList<ProfileMatch>();
+    	List<ProfileMatch> idMatches = new ArrayList<ProfileMatch>();
     	
-    	for (int match = 0; match < orderedMatches.size(); match++) {
-    		Profile p2 = profileMap.get(orderedMatches.get(match));
+    	for (ProfileMatch profMatch : groupMatches) {
+            Profile p1 = profileMap.get(profMatch.getProfileId1());
+    		Profile p2 = profileMap.get(profMatch.getProfileId2());
     		
-    		if (p2.getGroup().equals(group)) {
-    			bestGroupMatches.add(orderedMatches.get(match));
+    		if (p1.getId().equals(id) || p2.getId().equals(id)) {
+    			idMatches.add(profMatch);
     		}
     	}
 
         // Cull the list to the correct size.
-    	return cullList(bestGroupMatches, num);
-    }
-    
-    
-    public List<ProfileMatch> findBestGroupMatches(String group,int num) {
-    	final int numPossMatches = (((profileMap.size() - 1) + 1)/2) * (profileMap.size() - 1);
- 
-    	List<ProfileMatch> orderedMatches = findBestMatches(numPossMatches);
-    	
-    	int numGroupMatches = 0;
-    	List<ProfileMatch> bestGroupMatches = new ArrayList<ProfileMatch>();
-    	
-    	for (int match = 0; match < numPossMatches; match++) {
-    		ProfileMatch currentMatch = orderedMatches.get(match);
-    		Profile p1 = profileMap.get(currentMatch.getProfileId1());
-    		Profile p2 = profileMap.get(currentMatch.getProfileId2());
-    		
-    		if (p1.getGroup().equals(p2.getGroup()) && p1.getGroup().equals(group)) {
-    			bestGroupMatches.add(currentMatch);
-    			numGroupMatches++;
-    			
-    			if (numGroupMatches == num) {
-    				break;
-    			}
-    		}
-    	}
-    	
-    	return bestGroupMatches;
+    	return cullList(idMatches, num);
     }
 
+    /**
+     * Finds the best matching Profiles in the given group. Returns empty if
+     * group is not valid with the given parameters.
+     * @param group group to constrain to
+     * @param num number of matches to find
+     * @return List of ProfileMatches
+     */
+    public List<ProfileMatch> findBestGroupMatches(String group, int num) {
+        List<ProfileMatch> orderedMatches = findBestMatches(profileMap.size());
+
+        List<ProfileMatch> bestGroupMatches = new ArrayList<ProfileMatch>();
+
+        for (ProfileMatch profMatch : orderedMatches) {
+            String group1 = profileMap.get(profMatch.getProfileId1()).getGroup();
+            String group2 = profileMap.get(profMatch.getProfileId2()).getGroup();
+            if (group1.equals(group2) && group1.equals(group)) {
+                bestGroupMatches.add(profMatch);
+            }
+        }
+
+        return cullList(bestGroupMatches, num);
+    }
+
+    /**
+     * Loads data from a ProfileDataSource.
+     * @param dataSource to load from
+     */
     public void loadData(ProfileDataSource dataSource)
     {
         dataSource.init();
@@ -165,6 +175,13 @@ public class UserMatchApp
      */
     private List<ProfileMatch> cullList(List<ProfileMatch> list, int num) {
         Collections.sort(list, new SimilaritySort());
+        if (num <= 0 || list.isEmpty()) {
+            System.out.println("Cull list called with empty parameters.");
+            return new ArrayList<ProfileMatch>();
+        }
+        else if (num >= list.size()) {
+            return list;
+        }
         try {
             int start = list.size() - num;
             int end   = list.size();

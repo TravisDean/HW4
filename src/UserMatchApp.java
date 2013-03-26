@@ -53,8 +53,6 @@ public class UserMatchApp
     		
     		Profile p2 = profileMap.get(person);
     		
-    		matchScores = new ArrayList<ProfileMatch>();
-    		
     		matchScores.add(new ProfileMatch(id,person,p1.similarity(p2)));
     	}
     	
@@ -67,15 +65,17 @@ public class UserMatchApp
      * @return List of ProfileMatches
      */
     public List<ProfileMatch> findBestMatches(int num) {
+//        List<ProfileMatch> orderedMatches = findBestMatches(profileMap.size());
+
     	ArrayList<ProfileMatch> matches = new ArrayList<ProfileMatch>();
     	ArrayList<String> keys = new ArrayList<String>();
     	keys.addAll(profileMap.keySet());
-    	
+
     	for (int p1It = 0; p1It < profileMap.size() - 1; p1It++) {
     		Profile p1 = profileMap.get(keys.get(p1It));
     		for (int p2It = p1It + 1; p2It < profileMap.size(); p2It++) {
     			Profile p2 = profileMap.get(keys.get(p2It));
-    			
+
     			matches.add(new ProfileMatch(p1.getId(),p2.getId(),p1.similarity(p2)));
     		}
     	}

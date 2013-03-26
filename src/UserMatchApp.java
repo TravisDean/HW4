@@ -37,7 +37,7 @@ public class UserMatchApp
 
     /**
      * Finds the Profiles that have the most similarity to the Profile with the
-     * given ID. Runs in log(n) time.
+     * given ID.
      * @param id the Profile to match
      * @param num how many matches to return
      * @return a List with the best matches
@@ -50,23 +50,19 @@ public class UserMatchApp
     		if (person.equals(id)) {
     			continue;
     		}
-    		
     		Profile p2 = profileMap.get(person);
-    		
     		matchScores.add(new ProfileMatch(id,person,p1.similarity(p2)));
     	}
-    	
     	return cullList(matchScores, num);
     }
 
     /**
-     * Finds the best matching profiles. Runs in n^2*log(n) complexity..
+     * Finds the best matching profiles.
+     * TODO: clean up to match rest of methods.
      * @param num number of matches to return
      * @return List of ProfileMatches
      */
     public List<ProfileMatch> findBestMatches(int num) {
-//        List<ProfileMatch> orderedMatches = findBestMatches(profileMap.size());
-
     	ArrayList<ProfileMatch> matches = new ArrayList<ProfileMatch>();
     	ArrayList<String> keys = new ArrayList<String>();
     	keys.addAll(profileMap.keySet());
@@ -106,7 +102,6 @@ public class UserMatchApp
     		}
     	}
 
-        // Cull the list to the correct size.
     	return cullList(idMatches, num);
     }
 
@@ -176,7 +171,7 @@ public class UserMatchApp
     private List<ProfileMatch> cullList(List<ProfileMatch> list, int num) {
         Collections.sort(list, new SimilaritySort());
         if (num <= 0 || list.isEmpty()) {
-            System.out.println("Cull list called with empty parameters.");
+            //System.out.println("Cull list called with empty parameters.");
             return new ArrayList<ProfileMatch>();
         }
         else if (num >= list.size()) {

@@ -14,6 +14,7 @@ public class DemoCS2110DataSource
         ProfileDataSource ps = new CS2110Profile();
         ps.init();
 
+        // Add stuff here to test further.
         System.out.println("Enter an ID and Category (\"quit\" to end).");
         System.out.print("> ");
         Scanner scn = new Scanner(System.in);

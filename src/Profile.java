@@ -7,9 +7,6 @@ import java.util.TreeSet;
  * Unix ID: tjd2qj and cam4sn
  * Assignment: HW4
  * Lab Section: 102
- *
- * Todo: Fix for WebCat style.
- * TODO: Fix null category error.
  */
 public class Profile {
     private final String name;
@@ -145,13 +142,9 @@ public class Profile {
             double sim =
                 MATCHING_COEFF * sharedInterestsCount(prof2, category)
                 - NON_MATCHING_COEFF * nonSharedInterestsCount(prof2, category)
-                - NON_MATCHING_COEFF * prof2.nonSharedInterestsCount(this, category);
+                - NON_MATCHING_COEFF *
+                        prof2.nonSharedInterestsCount(this, category);
             similarity += sim;
-            // Testing code:
-//            System.out.println(category + ": " + sim);
-//            System.out.println("\tMatch: " + sharedInterestsCount(prof2, category));
-//            System.out.println("\tNot m: -0.25*" + nonSharedInterestsCount(prof2, category));
-//            System.out.println("\tNot m: -0.25*" + prof2.nonSharedInterestsCount(this, category));
         }
         return  similarity;
     }

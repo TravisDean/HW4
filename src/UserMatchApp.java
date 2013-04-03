@@ -11,28 +11,41 @@ import java.util.*;
 
 public class UserMatchApp
 {
-
-    private TreeMap<String,Profile> profileMap = new TreeMap<String, Profile>();
+    private TreeMap<String, Profile> profileMap =
+            new TreeMap<String, Profile>();
 
     public static void main(String[] args)
     {
-        // Here's some example code in main() showing how to use a UserMatchApp object.
-        // Our JUnit testing code will work this way, i.e. it will create an instance,
-        // and then call loadData() on that instance with our testing data-source. 
-        // Then we'll test your methods with our data.
-        
         UserMatchApp app = new UserMatchApp();
         ProfileDataSource ps = new MockProfileSource();
         app.loadData(ps);
 
-        // Test stuff.
+        // Test stuff with mock source.
         System.out.println("The current data:\n" + app.profileMap.toString());
         System.out.println("Best matches:\n" + app.findBestMatches(2));
-        System.out.println("Best id1 Matches:\n" + app.findBestMatches("id1", 2));
-        System.out.println("Best group1 matches:\n" + app.findBestGroupMatches("grp1", 2));
-        System.out.println("Best group2 matches:\n" + app.findBestGroupMatches("grp2", 2));
-        System.out.println("Best group2 and id1 matches:\n" + app.findBestGroupMatches("id1", "grp2", 2));
-        System.out.println("Best group2 and id2 matches:\n" + app.findBestGroupMatches("id2", "grp2", 2));
+        System.out.println("Best id1 Matches:\n" +
+                app.findBestMatches("id1", 2));
+        System.out.println("Best group1 matches:\n" +
+                app.findBestGroupMatches("grp1", 2));
+        System.out.println("Best group2 matches:\n" +
+                app.findBestGroupMatches("grp2", 2));
+        System.out.println("Best group2 and id1 matches:\n" +
+                app.findBestGroupMatches("id1", "grp2", 2));
+        System.out.println("Best group2 and id2 matches:\n" +
+                app.findBestGroupMatches("id2", "grp2", 2));
+
+        // Test stuff with the jar file resources.
+        UserMatchApp jar = new UserMatchApp();
+        ProfileDataSource csPS = new CS2110Profile();
+        jar.loadData(csPS);
+        System.out.println("Best matches:\n" +
+                jar.findBestMatches(3));
+        System.out.println("Best tjd2qj Matches:\n" +
+                jar.findBestMatches("tjd2qj", 2));
+        System.out.println("Best lab 102 matches:\n" +
+                jar.findBestGroupMatches("102", 2));
+        System.out.println("Best lab 102 and tjd2qj matches:\n" +
+                jar.findBestGroupMatches("tjd2qj", "102", 2));
     }
 
     /**
@@ -51,7 +64,7 @@ public class UserMatchApp
     			continue;
     		}
     		Profile p2 = profileMap.get(person);
-    		matchScores.add(new ProfileMatch(id,person,p1.similarity(p2)));
+    		matchScores.add(new ProfileMatch(id, person, p1.similarity(p2)));
     	}
     	return cullList(matchScores, num);
     }
@@ -72,7 +85,8 @@ public class UserMatchApp
     		for (int p2It = p1It + 1; p2It < profileMap.size(); p2It++) {
     			Profile p2 = profileMap.get(keys.get(p2It));
 
-    			matches.add(new ProfileMatch(p1.getId(),p2.getId(),p1.similarity(p2)));
+    			matches.add(new ProfileMatch(p1.getId(),
+                        p2.getId(), p1.similarity(p2)));
     		}
     	}
 
@@ -87,7 +101,8 @@ public class UserMatchApp
      * @param num number of matches to return
      * @return List of ProfileMatches
      */
-    public List<ProfileMatch> findBestGroupMatches(String id, String group, int num) {
+    public List<ProfileMatch> findBestGroupMatches(String id,
+                                                   String group, int num) {
     	List<ProfileMatch> groupMatches =
                 findBestGroupMatches(group, profileMap.size());
     	
@@ -118,9 +133,9 @@ public class UserMatchApp
         List<ProfileMatch> bestGroupMatches = new ArrayList<ProfileMatch>();
 
         for (ProfileMatch profMatch : orderedMatches) {
-            String group1 = profileMap.get(profMatch.getProfileId1()).getGroup();
-            String group2 = profileMap.get(profMatch.getProfileId2()).getGroup();
-            if (group1.equals(group2) && group1.equals(group)) {
+            String grp1 = profileMap.get(profMatch.getProfileId1()).getGroup();
+            String grp2 = profileMap.get(profMatch.getProfileId2()).getGroup();
+            if (grp1.equals(grp2) && grp1.equals(group)) {
                 bestGroupMatches.add(profMatch);
             }
         }
@@ -137,21 +152,14 @@ public class UserMatchApp
         dataSource.init();
         Set<String> profIDs = dataSource.getIds();
         Set<String> categories = dataSource.getCategories();
-        Set<String> groups = dataSource.getGroups();
-        
+
         for (String pid : profIDs) {
-            // need to create a new Profile, so complete the following line somehow:
-            // Profile newProfile = new Profile( ????
-            
-            // Next, somehow get info about category values in the data-source that
-            // we should store in the profile for the given profile-ID.
-            
-            // And of course, we need to make sure this is stored into the profileMap somehow.
-        	
-        	Profile profile = new Profile(pid,dataSource.getName(pid),dataSource.getGroup(pid));
+        	Profile profile = new Profile(pid,
+                    dataSource.getName(pid), dataSource.getGroup(pid));
         	
         	for (String category : categories) {
-        		Set<String> values = dataSource.getCategoryValues(pid, category);
+        		Set<String> values = dataSource.getCategoryValues(pid,
+                        category);
         		profile.addValues(category, values);
         	}
         	

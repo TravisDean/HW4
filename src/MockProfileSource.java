@@ -5,7 +5,8 @@
  * Lab Section: 102
  */
 /*
- * MockProfileSource -- simple and very very poor example of a ProfileDataSource class
+ * MockProfileSource -- simple and very very poor example
+ * of a ProfileDataSource class
  *
  * We hired a student from another university (we won't mention names) to
  * write us an example of a ProfileDataSource class that would implement all the
@@ -41,11 +42,6 @@ public class MockProfileSource implements ProfileDataSource
     private String[] booksForId1 = { "book1", "book2", "book3" };
     private String[] booksForId2 = { "book1", "book2", "book4", "book5" };
     private String[] tvForId1 = { "tv1", "tv2" };
-    private String[] tvForId2 = null; // for now, id2 has no favorite tv shows
-
-
-    public void MockProfileSource() {
-    }
 
     @Override
     public void init()
@@ -62,9 +58,11 @@ public class MockProfileSource implements ProfileDataSource
 
     private void checkInitialization()
     {
-        if ( ! hasBeenInitialized )
+        if ( !hasBeenInitialized ) {
             throw new RuntimeException(
-                    "Error: attempt to use ProfileSource that has not been initialized.");
+                    "Error: attempt to use ProfileSource" +
+                            " that has not been initialized.");
+        }
     }
 
     @Override
@@ -80,10 +78,12 @@ public class MockProfileSource implements ProfileDataSource
         checkInitialization();
         List<String> tmpList = Arrays.asList(ids);
         int pos = tmpList.indexOf(profId);
-        if ( pos == -1 )
+        if ( pos == -1 ) {
             return null;
-        else
+        }
+        else {
             return names[pos];
+        }
     }
 
     @Override
@@ -92,10 +92,12 @@ public class MockProfileSource implements ProfileDataSource
         checkInitialization();
         List<String> tmpList = Arrays.asList(ids);
         int pos = tmpList.indexOf(profId);
-        if ( pos == -1 )
+        if ( pos == -1 ) {
             return null;
-        else
+        }
+        else {
             return groups[pos];
+        }
     }
 
 
@@ -117,9 +119,10 @@ public class MockProfileSource implements ProfileDataSource
     {
         checkInitialization();
         TreeSet<String> res = new TreeSet<String>();
-        for (int i=0; i < groups.length; ++i) {
-            if ( groups[i].equals(grp) )
+        for (int i = 0; i < groups.length; ++i) {
+            if ( groups[i].equals(grp) ) {
                 res.add(ids[i]);
+            }
         }
         return res;
     }
@@ -130,7 +133,8 @@ public class MockProfileSource implements ProfileDataSource
     {
         checkInitialization();
         if ( cat.equals("book")) {
-            if ( profId.equals("id1") || profId.equals("id3") ) {  // id1 and id3 store the same data
+            if ( profId.equals("id1") || profId.equals("id3") ) {
+            // id1 and id3 store the same data
                 return new TreeSet<String>( Arrays.asList(booksForId1) );
             }
             else if ( profId.equals("id2") ) {
@@ -141,11 +145,13 @@ public class MockProfileSource implements ProfileDataSource
             }
         }
         else if ( cat.equals("tv")) {
-            if ( profId.equals("id1") || profId.equals("id3") ) {  // id1 and id3 store the same data
+            if ( profId.equals("id1") || profId.equals("id3") ) {
+            // id1 and id3 store the same data
                 return new TreeSet<String>( Arrays.asList(tvForId1) );
             }
             else if ( profId.equals("id2") ) {
-                return new TreeSet<String>();   // if no tv shows for id2, return empty set
+                return new TreeSet<String>();
+                // if no tv shows for id2, return empty set
             }
             else {
                 return null; // want to know about tv for unknown id

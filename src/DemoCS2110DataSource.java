@@ -19,7 +19,7 @@ public class DemoCS2110DataSource
         System.out.print("> ");
         Scanner scn = new Scanner(System.in);
         String id = scn.next();
-        while ( ! id.equals("quit") ) {
+        while ( !id.equals("quit") ) {
             String cat = scn.next();
             System.out.println(id + "," + ps.getName(id) + "," + ps.getGroup(id)
                     + "," + cat + ": " + ps.getCategoryValues(id, cat));

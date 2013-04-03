@@ -49,7 +49,8 @@ public class ProfileTest {
     public void testAddValue() throws Exception {
         Profile person = new Profile("tes1id", "Test", "group");
         person.addValue("book", "GED");
-        assertEquals("Profile{name='Test', id='tes1id', group='group', interests={book=[GED]}}", person.toString());
+        assertEquals("Profile{name='Test', id='tes1id', group='group'," +
+                " interests={book=[GED]}}", person.toString());
     }
 
     @Test
@@ -59,7 +60,8 @@ public class ProfileTest {
         books.add("GED");
         books.add("MYB");
         person.addValues("book", books);
-        assertEquals("Profile{name='Test', id='tes1id', group='group', interests={book=[GED, MYB]}}", person.toString());
+        assertEquals("Profile{name='Test', id='tes1id', group='group'," +
+                " interests={book=[GED, MYB]}}", person.toString());
 
     }
 
@@ -67,7 +69,8 @@ public class ProfileTest {
     public void testSharedInterestsCount() throws Exception {
         int artistsSharedWithAlex = travis.sharedInterestsCount(alex, "artist");
         assertEquals(1, artistsSharedWithAlex);
-        int artistsSharedWithTravis = alex.sharedInterestsCount(travis, "artist");
+        int artistsSharedWithTravis =
+                alex.sharedInterestsCount(travis, "artist");
         assertEquals(1, artistsSharedWithTravis);
 
         int booksSharedWithAlex = travis.sharedInterestsCount(alex, "book");
@@ -83,9 +86,11 @@ public class ProfileTest {
 
     @Test
     public void testNonSharedInterestsCount() throws Exception {
-        int artistsDiffWithAlex = travis.nonSharedInterestsCount(alex, "artist");
+        int artistsDiffWithAlex =
+                travis.nonSharedInterestsCount(alex, "artist");
         assertEquals(2, artistsDiffWithAlex);
-        int artistsDiffWithTravis = alex.nonSharedInterestsCount(travis, "artist");
+        int artistsDiffWithTravis =
+                alex.nonSharedInterestsCount(travis, "artist");
         assertEquals(0, artistsDiffWithTravis);
 
         int booksDiffWithAlex = travis.nonSharedInterestsCount(alex, "book");
@@ -95,7 +100,8 @@ public class ProfileTest {
 
         int moviesDiffWithAlex = travis.nonSharedInterestsCount(alex, "movie");
         assertEquals(0, moviesDiffWithAlex);
-        int moviesDiffWithTravis = alex.nonSharedInterestsCount(travis, "movie");
+        int moviesDiffWithTravis =
+                alex.nonSharedInterestsCount(travis, "movie");
         assertEquals(1, moviesDiffWithTravis);
     }
 
